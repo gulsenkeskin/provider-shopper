@@ -78,7 +78,7 @@ ChangeNotifierProvider
 
 ChangeNotifier Sağlayıcısını nereye koyacağımızı zaten biliyoruz: erişmesi gereken widget'ların üstünde. Cart Modeli söz konusu olduğunda, bu hem MyCart hem de mycatalog'un üstünde bir yer anlamına gelir.
 
-Changenotifierprovider'ı gerekenden daha yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda, hem Kartımın hem de Kataloğumun üstünde bulunan tek widget Myapp'tır.
+Changenotifierprovider'ı gerekenden daha yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda, hem MyCart hem de MyCatalog'un üstünde bulunan tek widget MyApp'tir.
 
 ```
 void main() {
@@ -90,7 +90,7 @@ void main() {
   );
 }
 ```
-Yeni bir CartModel örneği oluşturan bir oluşturucu tanımladığımızı unutmayın. Bildirim Sağlayıcısını Değiştir, kesinlikle gerekli olmadıkça Sepet Modelini yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında Sepet Modelinde dispose() öğesini otomatik olarak çağırır.
+Yeni bir CartModel örneği oluşturan bir oluşturucu tanımladığımızı unutmayın. ChangeNotifierProvider (Bildirim Sağlayıcısını Değiştir), kesinlikle gerekli olmadıkça Sepet Modelini yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında CartModel'de dispose() öğesini otomatik olarak çağırır.
 
 Birden fazla sınıf sağlamak istiyorsanız, MultiProvider kullanabilirsiniz:
 
@@ -111,9 +111,9 @@ void main() {
 
 Consumer
 
-Artık CartModel , uygulamanızdaki widget'lara en üstteki ChangeNotifierProvider -Değişiklik Bildiricisi Sağlayıcı bildirimi aracılığıyla sağlandığından, kullanmaya başlayabiliriz.
+Artık CartModel , uygulamanızdaki widget'lara en üstteki ChangeNotifierProvider  bildirimi aracılığıyla sağlandığından, bunu kullanmaya başlayabiliriz.
 
-Bu, Consumer -Tüketici widget'ı aracılığıyla yapılır.
+Bu, Consumer widget'ı aracılığıyla yapılır.
 
 ```
 return Consumer<CartModel>(
@@ -123,16 +123,16 @@ return Consumer<CartModel>(
 );
 ```
 
-Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, istiyoruz CartModel, bu yüzden yazıyoruz Consumer<CartModel>. Genel ( <CartModel>) belirtmezseniz, providerpaket size yardımcı olamaz. providertürlere dayanır ve tür olmadan ne istediğinizi bilmez.
+Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, istiyoruz CartModel, bu yüzden yazıyoruz Consumer<CartModel> generic (<CartModel>) belirtmezseniz, provider paket size yardımcı olamaz. provider türlere dayanır ve tür olmadan ne istediğinizi bilmez.
 
 
-ConsumerWidget'ın tek gerekli argümanı oluşturucudur. Oluşturucu, her ChangeNotifierdeğişiklik yapıldığında çağrılan bir işlevdir . (Başka bir deyişle, notifyListeners() modelinizi çağırdığınızda , ilgili tüm Consumerwidget'ların tüm oluşturucu yöntemleri çağrılır.)
+Consumer widget'ının tek gerekli argümanı oluşturucudur. Oluşturucu, ChangeNotifier  her değiştiğinde çağrılan bir işlevdir. (Başka bir deyişle, modelinizde notifyListeners() öğesini çağırdığınızda, ilgili tüm Consumer widget'larının tüm oluşturucu yöntemleri çağrılır.)
 
-Oluşturucu üç argümanla çağrılır. Birincisi context, her derleme yönteminde de aldığınız .
+Oluşturucu üç argümanla çağrılır. Birincisi her derleme yönteminde de aldığınız context'dir.
 
-Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier-Değişiklik Bildiricisinin örneğidir. En başta istediğimiz buydu. Kullanıcı arayüzünün herhangi bir noktada nasıl görünmesi gerektiğini tanımlamak için modeldeki verileri kullanabilirsiniz.
+Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier(Değişiklik Bildiricisinin) örneğidir. En başta istediğimiz buydu. Kullanıcı arayüzünün herhangi bir noktada nasıl görünmesi gerektiğini tanımlamak için modeldeki verileri kullanabilirsiniz.
 
-Üçüncü argüman, optimizasyon için var olan çocuktur-child. Consumer -Tüketicinizin altında, model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, bunu bir kez oluşturabilir ve oluşturucudan alabilirsiniz.
+Üçüncü argüman, optimizasyon için var olan child'dır. Consumer'ın altında, model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, bunu bir kez oluşturabilir ve oluşturucudan alabilirsiniz.
 
 
 ```
@@ -150,6 +150,7 @@ return Consumer<CartModel>(
   ```
 
 ConsumerWidget'larınızı ağacın mümkün olduğunca derinlerine yerleştirmek en iyi uygulamadır . Bir yerlerde bazı ayrıntılar değişti diye kullanıcı arayüzünün büyük bölümlerini yeniden oluşturmak istemezsiniz.
+
 
   ```
 return Consumer<CartModel>(
@@ -169,7 +170,7 @@ return Consumer<CartModel>(
 Bunun yerine:
 
   ```
-// DO THIS
+//Bunu kullan
 return HumongousWidget(
   // ...
   child: AnotherMonstrousWidget(
@@ -188,13 +189,12 @@ Provider.of
 
 Bazen, kullanıcı arayüzünü değiştirmek için modeldeki verilere gerçekten ihtiyacınız yoktur, ancak yine de erişmeniz gerekir. Örneğin, Sepeti Temizle düğmesi kullanıcının her şeyi sepetten kaldırmasına izin vermek ister. Sepetin içeriğini görüntülemesine gerek yok, sadece clear () yöntemini çağırması gerekiyor.
 
-Bunun için Consumer<Cart Model> kullanabiliriz, ancak bu israf olur. Çerçeveden yeniden oluşturulması gerekmeyen bir widget'ı yeniden oluşturmasını istiyoruz.
+Bunun için Consumer<Cart Model> kullanabiliriz, ancak bu israf olur. Çerçeveden (framework) yeniden oluşturulması gerekmeyen bir widget'ı yeniden oluşturmasını istiyoruz.
 
-Bu kullanım durumu için Provider.of,(Sağlayıcıyı) kullanabiliriz.arasında, listen parametresi false olarak ayarlanmış.
+Bu kullanım durumu için Provider.of(Sağlayıcıyı) kullanabiliriz -> listen parametresi false olarak ayarlandığında.
 
-Provider.of<CartModel>(context, listen: false).removeAll();
+  `Provider.of<CartModel>(context, listen: false).removeAll();`
 
-Yukarıdaki satırı bir derleme yönteminde kullanmak notifyListeners, çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz .
-
+Yukarıdaki satırı bir build methodunda kullanmak, notifyListeners çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz.
  
  Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
