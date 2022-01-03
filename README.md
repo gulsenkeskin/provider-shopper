@@ -78,7 +78,7 @@ test('adding item increases total cost', () {
 
 ## ChangeNotifierProvider
 
-ChangeNotifierProvider, soyundan gelenlere bir ChangeNotifier örneği sağlayan pencere öğesidir. Sağlayıcı paketinden gelir.
+ChangeNotifierProvider, soyundan gelenlere bir ChangeNotifier örneği sağlayan pencere öğesidir. Provider paketinden gelir.
 
 ChangeNotifierProvider:'ı ona erişmesi gereken widget'ların üzerine nereye koyacağımızı zaten biliyoruz. CartModel söz konusu olduğunda bu, hem MyCart hem de MyCatalog'un üzerinde bir yer anlamına gelir.
 
