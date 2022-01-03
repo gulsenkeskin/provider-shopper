@@ -33,17 +33,16 @@ Alışveriş uygulaması örneğimizde, sepetin durumunu bir ChangeNotifier da(D
 
 ```
 class CartModel extends ChangeNotifier {
-  /// Internal, private state of the cart.
   final List<Item> _items = [];
  
-///Sepetteki öğelerin değiştirilemez bir görünümü.
- 
+ //Sepetteki öğelerin değiştirilemez bir görünümü.
   UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
-/// .Tüm kalemlerin geçerli toplam fiyatı (tüm kalemlerin 42 ABD Doları olduğu varsayılarak)
+  
+ //Tüm kalemlerin geçerli toplam fiyatı (tüm kalemlerin 42 ABD Doları olduğu varsayılarak)
 
   int get totalPrice => _items.length * 42;
 
-  /// cart from the outside.
+  // cart from the outside.
   void add(Item item) {
     _items.add(item);
     // This call tells the widgets that are listening to this model to rebuild.
@@ -58,14 +57,13 @@ class CartModel extends ChangeNotifier {
 }
 ```
 
-
-Özel olan tek kod ChangeNotifier, çağrıdır notifyListeners(). Model, uygulamanızın kullanıcı arayüzünü değiştirebilecek şekilde her değiştiğinde bu yöntemi çağırın. Diğer her şey CartModelmodelin kendisi ve iş mantığıdır.
-
-
-ChangeNotifierflutter:foundationFlutter'daki üst düzey sınıfların bir parçasıdır ve bunlara bağlı değildir. Kolayca test edilebilir ( bunun için widget testi kullanmanıza bile gerek yoktur ). Örneğin, işte basit bir birim testi CartModel:
+ChangeNotifier'a özel olan tek kod notifyListeners() dır. Model, uygulamanızın kullanıcı arayüzünü değiştirebilecek şekilde her değiştiğinde bu yöntemi çağırın. Diğer her şey CartModel'in kendisi ve iş mantığıdır.
 
 
+ChangeNotifierflutter: foundationFlutter'daki üst düzey sınıfların bir parçasıdır ve bunlara bağlı değildir. Kolayca test edilebilir ( bunun için widget testi kullanmanıza bile gerek yoktur ). Örneğin, işte basit bir birim testi CartModel:
 
+
+```
 test('adding item increases total cost', () {
   final cart = CartModel();
   final startingPrice = cart.totalPrice;
@@ -74,6 +72,7 @@ test('adding item increases total cost', () {
   });
   cart.add(Item('Dash'));
 });
+```
 
 ChangeNotifierProvider
 
@@ -81,6 +80,7 @@ ChangeNotifier Sağlayıcısını nereye koyacağımızı zaten biliyoruz: eriş
 
 Changenotifierprovider'ı gerekenden daha yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda, hem Kartımın hem de Kataloğumun üstünde bulunan tek widget Myapp'tır.
 
+```
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -89,11 +89,12 @@ void main() {
     ),
   );
 }
-
+```
 Yeni bir CartModel örneği oluşturan bir oluşturucu tanımladığımızı unutmayın. Bildirim Sağlayıcısını Değiştir, kesinlikle gerekli olmadıkça Sepet Modelini yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında Sepet Modelinde dispose() öğesini otomatik olarak çağırır.
 
 Birden fazla sınıf sağlamak istiyorsanız, MultiProvider kullanabilirsiniz:
 
+```
 void main() {
   runApp(
     MultiProvider(
@@ -105,7 +106,7 @@ void main() {
     ),
   );
 }
-
+```
 
 
 Consumer
@@ -114,12 +115,13 @@ Artık CartModel , uygulamanızdaki widget'lara en üstteki ChangeNotifierProvid
 
 Bu, Consumer -Tüketici widget'ı aracılığıyla yapılır.
 
+```
 return Consumer<CartModel>(
   builder: (context, cart, child) {
     return Text("Total price: ${cart.totalPrice}");
   },
 );
-
+```
 
 Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, istiyoruz CartModel, bu yüzden yazıyoruz Consumer<CartModel>. Genel ( <CartModel>) belirtmezseniz, providerpaket size yardımcı olamaz. providertürlere dayanır ve tür olmadan ne istediğinizi bilmez.
 
@@ -133,7 +135,7 @@ Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier-Değişikl
 Üçüncü argüman, optimizasyon için var olan çocuktur-child. Consumer -Tüketicinizin altında, model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, bunu bir kez oluşturabilir ve oluşturucudan alabilirsiniz.
 
 
-
+```
 return Consumer<CartModel>(
   builder: (context, cart, child) => Stack(
     children: [
@@ -145,9 +147,11 @@ return Consumer<CartModel>(
   // Build the expensive widget here.
   child: const SomeExpensiveWidget(),
 );
+  ```
 
 ConsumerWidget'larınızı ağacın mümkün olduğunca derinlerine yerleştirmek en iyi uygulamadır . Bir yerlerde bazı ayrıntılar değişti diye kullanıcı arayüzünün büyük bölümlerini yeniden oluşturmak istemezsiniz.
 
+  ```
 return Consumer<CartModel>(
   builder: (context, cart, child) {
     return HumongousWidget(
@@ -159,11 +163,12 @@ return Consumer<CartModel>(
     );
   },
 );
-
+```
 
 
 Bunun yerine:
 
+  ```
 // DO THIS
 return HumongousWidget(
   // ...
@@ -176,7 +181,7 @@ return HumongousWidget(
     ),
   ),
 );
-
+```
 
 
 Provider.of
