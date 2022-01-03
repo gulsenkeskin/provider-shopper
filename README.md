@@ -94,9 +94,9 @@ void main() {
   );
 }
 ```
-Yeni bir CartModel örneği oluşturan bir oluşturucu tanımladığımızı unutmayın. ChangeNotifierProvider (Bildirim Sağlayıcısını Değiştir), kesinlikle gerekli olmadıkça Sepet Modelini yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında CartModel'de dispose() öğesini otomatik olarak çağırır.
+CartModel'in yeni bir örneğini oluşturan bir oluşturucu tanımladığımızı unutmayın. ChangeNotifierProvider, kesinlikle gerekli olmadıkça CartModel'i yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında CartModel'de Dispose() işlevini otomatik olarak çağırır.
 
-Birden fazla sınıf sağlamak istiyorsanız, MultiProvider kullanabilirsiniz:
+Birden fazla sınıf sağlamak istiyorsanız, MultiProvider'ı kullanabilirsiniz:
 
 ```
 void main() {
@@ -127,16 +127,15 @@ return Consumer<CartModel>(
 );
 ```
 
-Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, istiyoruz CartModel, bu yüzden yazıyoruz Consumer<CartModel> generic (<CartModel>) belirtmezseniz, provider paket size yardımcı olamaz. provider türlere dayanır ve tür olmadan ne istediğinizi bilmez.
+Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, CartModel'i istiyoruz, bu yüzden Consumer<CartModel> yazıyoruz. Jenerik (<CartModel>) belirtmezseniz, sağlayıcı paketi size yardımcı olamaz. sağlayıcı türlere dayanır ve tür olmadan ne istediğinizi bilmez.
 
+Tüketici widget'ının tek gerekli argümanı oluşturucudur. Oluşturucu, ChangeNotifier değiştiğinde çağrılan bir işlevdir. (Başka bir deyişle, modelinizde notifyListeners() öğesini çağırdığınızda, karşılık gelen tüm Tüketici pencere öğelerinin tüm oluşturucu yöntemleri çağrılır.)
 
-Consumer widget'ının tek gerekli argümanı oluşturucudur. Oluşturucu, ChangeNotifier  her değiştiğinde çağrılan bir işlevdir. (Başka bir deyişle, modelinizde notifyListeners() öğesini çağırdığınızda, ilgili tüm Consumer widget'larının tüm oluşturucu yöntemleri çağrılır.)
+Oluşturucu üç argümanla çağrılır. İlki, her derleme yönteminde de aldığınız contextir (bağlamdır).
+  
+Oluşturucu işlevinin ikinci argümanı, ChangeNotifier örneğidir. En başta istediğimiz buydu. Herhangi bir noktada kullanıcı arayüzünün nasıl görünmesi gerektiğini tanımlamak için modeldeki verileri kullanabilirsiniz.
 
-Oluşturucu üç argümanla çağrılır. Birincisi her derleme yönteminde de aldığınız context'dir.
-
-Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier(Değişiklik Bildiricisinin) örneğidir. En başta istediğimiz buydu. Kullanıcı arayüzünün herhangi bir noktada nasıl görünmesi gerektiğini tanımlamak için modeldeki verileri kullanabilirsiniz.
-
-Üçüncü argüman, optimizasyon için var olan child'dır. Consumer'ın altında, model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, bunu bir kez oluşturabilir ve oluşturucudan alabilirsiniz.
+Üçüncü argüman, optimizasyon için orada olan child'dır. Consumer'ınızın altında model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, onu bir kez oluşturabilir ve oluşturucudan geçirebilirsiniz.
 
 
 ```
@@ -153,8 +152,7 @@ return Consumer<CartModel>(
 );
   ```
 
-ConsumerWidget'larınızı ağacın mümkün olduğunca derinlerine yerleştirmek en iyi uygulamadır . Bir yerlerde bazı ayrıntılar değişti diye kullanıcı arayüzünün büyük bölümlerini yeniden oluşturmak istemezsiniz.
-
+Consumer widget'larınızı ağacın mümkün olduğunca derinlerine yerleştirmek en iyi uygulamadır. Bazı ayrıntılar değişti diye kullanıcı arayüzünün büyük bölümlerini yeniden oluşturmak istemezsiniz.
 
   ```
 return Consumer<CartModel>(
@@ -191,12 +189,12 @@ return HumongousWidget(
 
 ## Provider.of
 
-Bazen, kullanıcı arayüzünü değiştirmek için modeldeki verilere gerçekten ihtiyacınız yoktur, ancak yine de erişmeniz gerekir. Örneğin, Sepeti Temizle düğmesi kullanıcının her şeyi sepetten kaldırmasına izin vermek ister. Sepetin içeriğini görüntülemesine gerek yok, sadece clear () yöntemini çağırması gerekiyor.
+Bazen, kullanıcı arayüzünü değiştirmek için modeldeki verilere gerçekten ihtiyacınız olmaz, ancak yine de ona erişmeniz gerekir. Örneğin, ClearCart düğmesi, kullanıcının sepetteki her şeyi kaldırmasına izin vermek ister. Sepetin içeriğini görüntülemesi gerekmez, sadece clear() yöntemini çağırması gerekir.
 
 Bunun için Consumer<Cart Model> kullanabiliriz, ancak bu israf olur. Çerçeveden (framework) yeniden oluşturulması gerekmeyen bir widget'ı yeniden oluşturmasını istiyoruz.
 
-Bu kullanım durumu için Provider.of(Sağlayıcıyı) kullanabiliriz -> listen parametresi false olarak ayarlandığında.
-
+Bu kullanım durumu için, listen parametresi false olarak ayarlanmış olarak Provider.of'u kullanabiliriz.
+  
   `Provider.of<CartModel>(context, listen: false).removeAll();`
 
 Yukarıdaki satırı bir build methodunda kullanmak, notifyListeners çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz.
