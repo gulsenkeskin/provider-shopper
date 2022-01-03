@@ -1,50 +1,40 @@
-# provider_shopper
- 
+# Provider Kullanım Örneği
+
+![image](https://user-images.githubusercontent.com/63197899/147919173-2bed80e0-0a90-4f36-abe2-316001a214f4.png)
 Yalnızca ebeveynlerinin oluşturma yöntemlerinde yeni widget'lar oluşturabildiğiniz için, içeriği değiştirmek istiyorsanız, bunun mycart'ın üst öğesinde veya üstünde yaşaması gerekir.
 
+Flutter'da state'i , onu kullanan widget'ların üzerinde tutmak mantıklıdır.
 
+Flutter'da içeriği her değiştiğinde yeni bir UI öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabilirsiniz
 
-![image](https://user-images.githubusercontent.com/63197899/147916963-70a9112e-f3b8-4e52-8071-8fb7f275a28f.png)
-
-
-Flutter'da durumu, onu kullanan widget'ların üzerinde tutmak mantıklıdır.
-
-Flutter'da içeriği her değiştiğinde yeni bir pencere öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabildiğiniz için, değiştirmek istiyorsanız 'nin ebeveyninde veya üstünde contentsyaşaması gerekir MyCart.
-
-// GOOD
 void myTapHandler(BuildContext context) {
   var cartModel = somehowGetMyCartModel(context);
   cartModel.add(item);
 }
 
-// GOOD
 Widget build(BuildContext context) {
   var cartModel = somehowGetMyCartModel(context);
   return SomeWidget(
-    // Just construct the UI once, using the current state of the cart.
-    // ···
+     // Sepetin mevcut durumunu kullanarak kullanıcı arayüzünü bir kez oluşturun.   
+     // ···
   );
 }
 
 
-ChangeNotifier
+##ChangeNotifier
 
-ChangeNotifierdinleyicilerine değişiklik bildirimi sağlayan Flutter SDK'da bulunan basit bir sınıftır. Başka bir deyişle, bir şey a ChangeNotifierise, değişikliklerine abone olabilirsiniz. 
+ChangeNotifier dinleyicilerine değişiklik bildirimi sağlayan Flutter SDK'da bulunan basit bir sınıftır. Başka bir deyişle, bir şey a ChangeNotifier ise, değişikliklerine abone olabilirsiniz. 
 
+Sağlayıcı'da (provider), ChangeNotifier (Değişiklik Bildiricisi), uygulama durumunuzu kapsüllemenin bir yoludur. Çok basit uygulamalar için, tek bir ChangeNotifier kullanabilirsiniz. Karmaşık olanlarda, birkaç modele ve dolayısıyla birkaç ChangeNotifier'a sahip olacaksınız. (Changenotifier'ı provider ile birlikte kullanmanıza gerek yoktur, ancak çalışması kolay bir sınıftır.)
 
-Olarak provider, ChangeNotifieruygulamanız durumunu muhafaza etmek bir yoludur. Çok basit uygulamalar için tek bir ChangeNotifier. Karmaşık modellerde, birkaç modeliniz olacak ve bu nedenle birkaç ChangeNotifiers. (Hiç bir şekilde ChangeNotifierwith kullanmanıza gerek yok provider , ancak birlikte çalışması kolay bir sınıf.)
+Alışveriş uygulaması örneğimizde, sepetin durumunu bir ChangeNotifier da(Değişiklik Bildiricisinde ) yönetmek istiyoruz. Onu genişleten yeni bir sınıf oluşturuyoruz, şöyle:
 
-
-Alışveriş uygulaması örneğimizde, sepetin durumunu bir 
-ChangeNotifier (Değişiklik Bildiricisinde) yönetmek istiyoruz. Onu genişleten yeni bir sınıf oluşturuyoruz, şöyle:
-
-
-
-
-class CartModel extends ChangeNotifier {
+`class CartModel extends ChangeNotifier {
   /// Internal, private state of the cart.
   final List<Item> _items = [];
-///Sepetteki öğelerin değiştirilemez bir görünümü.t.
+ 
+///Sepetteki öğelerin değiştirilemez bir görünümü.
+ 
   UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
 /// .Tüm kalemlerin geçerli toplam fiyatı (tüm kalemlerin 42 ABD Doları olduğu varsayılarak)
 
@@ -62,16 +52,14 @@ class CartModel extends ChangeNotifier {
   // Bu çağrı, bu modeli dinleyen widget'lara yeniden oluşturmalarını söyler.
     notifyListeners();
   }
-}
+}`
 
-Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
 
 Özel olan tek kod ChangeNotifier, çağrıdır notifyListeners(). Model, uygulamanızın kullanıcı arayüzünü değiştirebilecek şekilde her değiştiğinde bu yöntemi çağırın. Diğer her şey CartModelmodelin kendisi ve iş mantığıdır.
 
 
 ChangeNotifierflutter:foundationFlutter'daki üst düzey sınıfların bir parçasıdır ve bunlara bağlı değildir. Kolayca test edilebilir ( bunun için widget testi kullanmanıza bile gerek yoktur ). Örneğin, işte basit bir birim testi CartModel:
 
-Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
 
 
 test('adding item increases total cost', () {
@@ -198,3 +186,6 @@ Bu kullanım durumu için Provider.of,(Sağlayıcıyı) kullanabiliriz.arasında
 Provider.of<CartModel>(context, listen: false).removeAll();
 
 Yukarıdaki satırı bir derleme yönteminde kullanmak notifyListeners, çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz .
+
+ 
+ Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
