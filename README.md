@@ -47,13 +47,13 @@ class CartModel extends ChangeNotifier {
   // cart from the outside.
   void add(Item item) {
     _items.add(item);
-    // This call tells the widgets that are listening to this model to rebuild.
+    // Bu çağrı, bu modeli dinleyen widget'lara yeniden oluşturmalarını söyler.
     notifyListeners();
   }
 
   void removeAll() {
     _items.clear();
-  // Bu çağrı, bu modeli dinleyen widget'lara yeniden oluşturmalarını söyler.
+    // Bu çağrı, bu modeli dinleyen widget'lara yeniden oluşturmalarını söyler.
     notifyListeners();
   }
 }
@@ -141,7 +141,7 @@ Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier(Değişikl
 return Consumer<CartModel>(
   builder: (context, cart, child) => Stack(
     children: [
-    // // Her seferinde yeniden inşa etmeden burada SomeExpensiveWidget  kullanın.
+      // Her seferinde yeniden inşa etmeden burada SomeExpensiveWidget  kullanın.
       if (child != null) child,
       Text("Total price: ${cart.totalPrice}"),
     ],
