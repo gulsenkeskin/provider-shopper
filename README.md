@@ -78,9 +78,11 @@ test('adding item increases total cost', () {
 
 ## ChangeNotifierProvider
 
-ChangeNotifier Sağlayıcısını nereye koyacağımızı zaten biliyoruz: erişmesi gereken widget'ların üstünde. Cart Modeli söz konusu olduğunda, bu hem MyCart hem de mycatalog'un üstünde bir yer anlamına gelir.
+ChangeNotifierProvider, soyundan gelenlere bir ChangeNotifier örneği sağlayan pencere öğesidir. Sağlayıcı paketinden gelir.
 
-ChangeNotifierProvider'ı gerekenden daha yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda, hem MyCart hem de MyCatalog'un üstünde bulunan tek widget MyApp'tir.
+ChangeNotifierProvider:'ı ona erişmesi gereken widget'ların üzerine nereye koyacağımızı zaten biliyoruz. CartModel söz konusu olduğunda bu, hem MyCart hem de MyCatalog'un üzerinde bir yer anlamına gelir.
+
+ChangeNotifierProvider'ı gereğinden yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda hem MyCart'ın hem de MyCatalog'un üstünde olan tek pencere öğesi MyApp'dir.
 
 ```
 void main() {
