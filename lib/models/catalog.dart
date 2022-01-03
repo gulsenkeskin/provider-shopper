@@ -24,6 +24,10 @@ class CatalogModel{
 
 /// Bu örnekte, katalog sonsuzdur ve [öğe Adları] üzerinde döngü yapar.
   Item getById(int id)=> Item(id, itemNames[id % itemNames.length]);
+  Item getByPosition(int position) {
+   //bir öğenin katalogdaki konumu
+    return getById(position);
+  }
 
 }
 
