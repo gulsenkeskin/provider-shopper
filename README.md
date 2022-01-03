@@ -197,4 +197,4 @@ Bu kullanım durumu için Provider.of(Sağlayıcıyı) kullanabiliriz -> listen 
 
 Yukarıdaki satırı bir build methodunda kullanmak, notifyListeners çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz.
  
- Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
+ resource: <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
