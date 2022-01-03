@@ -1,2 +1,200 @@
 # provider_shopper
  
+Yalnızca ebeveynlerinin oluşturma yöntemlerinde yeni widget'lar oluşturabildiğiniz için, içeriği değiştirmek istiyorsanız, bunun mycart'ın üst öğesinde veya üstünde yaşaması gerekir.
+
+
+
+![image](https://user-images.githubusercontent.com/63197899/147916963-70a9112e-f3b8-4e52-8071-8fb7f275a28f.png)
+
+
+Flutter'da durumu, onu kullanan widget'ların üzerinde tutmak mantıklıdır.
+
+Flutter'da içeriği her değiştiğinde yeni bir pencere öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabildiğiniz için, değiştirmek istiyorsanız 'nin ebeveyninde veya üstünde contentsyaşaması gerekir MyCart.
+
+// GOOD
+void myTapHandler(BuildContext context) {
+  var cartModel = somehowGetMyCartModel(context);
+  cartModel.add(item);
+}
+
+// GOOD
+Widget build(BuildContext context) {
+  var cartModel = somehowGetMyCartModel(context);
+  return SomeWidget(
+    // Just construct the UI once, using the current state of the cart.
+    // ···
+  );
+}
+
+
+ChangeNotifier
+
+ChangeNotifierdinleyicilerine değişiklik bildirimi sağlayan Flutter SDK'da bulunan basit bir sınıftır. Başka bir deyişle, bir şey a ChangeNotifierise, değişikliklerine abone olabilirsiniz. 
+
+
+Olarak provider, ChangeNotifieruygulamanız durumunu muhafaza etmek bir yoludur. Çok basit uygulamalar için tek bir ChangeNotifier. Karmaşık modellerde, birkaç modeliniz olacak ve bu nedenle birkaç ChangeNotifiers. (Hiç bir şekilde ChangeNotifierwith kullanmanıza gerek yok provider , ancak birlikte çalışması kolay bir sınıf.)
+
+
+Alışveriş uygulaması örneğimizde, sepetin durumunu bir 
+ChangeNotifier (Değişiklik Bildiricisinde) yönetmek istiyoruz. Onu genişleten yeni bir sınıf oluşturuyoruz, şöyle:
+
+
+
+
+class CartModel extends ChangeNotifier {
+  /// Internal, private state of the cart.
+  final List<Item> _items = [];
+///Sepetteki öğelerin değiştirilemez bir görünümü.t.
+  UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+/// .Tüm kalemlerin geçerli toplam fiyatı (tüm kalemlerin 42 ABD Doları olduğu varsayılarak)
+
+  int get totalPrice => _items.length * 42;
+
+  /// cart from the outside.
+  void add(Item item) {
+    _items.add(item);
+    // This call tells the widgets that are listening to this model to rebuild.
+    notifyListeners();
+  }
+
+  void removeAll() {
+    _items.clear();
+  // Bu çağrı, bu modeli dinleyen widget'lara yeniden oluşturmalarını söyler.
+    notifyListeners();
+  }
+}
+
+Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
+
+Özel olan tek kod ChangeNotifier, çağrıdır notifyListeners(). Model, uygulamanızın kullanıcı arayüzünü değiştirebilecek şekilde her değiştiğinde bu yöntemi çağırın. Diğer her şey CartModelmodelin kendisi ve iş mantığıdır.
+
+
+ChangeNotifierflutter:foundationFlutter'daki üst düzey sınıfların bir parçasıdır ve bunlara bağlı değildir. Kolayca test edilebilir ( bunun için widget testi kullanmanıza bile gerek yoktur ). Örneğin, işte basit bir birim testi CartModel:
+
+Kaynak <https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple> 
+
+
+test('adding item increases total cost', () {
+  final cart = CartModel();
+  final startingPrice = cart.totalPrice;
+  cart.addListener(() {
+    expect(cart.totalPrice, greaterThan(startingPrice));
+  });
+  cart.add(Item('Dash'));
+});
+
+ChangeNotifierProvider
+
+ChangeNotifier Sağlayıcısını nereye koyacağımızı zaten biliyoruz: erişmesi gereken widget'ların üstünde. Cart Modeli söz konusu olduğunda, bu hem MyCart hem de mycatalog'un üstünde bir yer anlamına gelir.
+
+Changenotifierprovider'ı gerekenden daha yükseğe yerleştirmek istemezsiniz (çünkü kapsamı kirletmek istemezsiniz). Ancak bizim durumumuzda, hem Kartımın hem de Kataloğumun üstünde bulunan tek widget Myapp'tır.
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartModel(),
+      child: const MyApp(),
+    ),
+  );
+}
+
+Yeni bir CartModel örneği oluşturan bir oluşturucu tanımladığımızı unutmayın. Bildirim Sağlayıcısını Değiştir, kesinlikle gerekli olmadıkça Sepet Modelini yeniden oluşturmayacak kadar akıllıdır. Ayrıca, örneğe artık ihtiyaç duyulmadığında Sepet Modelinde dispose() öğesini otomatik olarak çağırır.
+
+Birden fazla sınıf sağlamak istiyorsanız, MultiProvider kullanabilirsiniz:
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartModel()),
+        Provider(create: (context) => SomeOtherClass()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
+
+
+
+Consumer
+
+Artık CartModel , uygulamanızdaki widget'lara en üstteki ChangeNotifierProvider -Değişiklik Bildiricisi Sağlayıcı bildirimi aracılığıyla sağlandığından, kullanmaya başlayabiliriz.
+
+Bu, Consumer -Tüketici widget'ı aracılığıyla yapılır.
+
+return Consumer<CartModel>(
+  builder: (context, cart, child) {
+    return Text("Total price: ${cart.totalPrice}");
+  },
+);
+
+
+Erişmek istediğimiz modelin türünü belirtmeliyiz. Bu durumda, istiyoruz CartModel, bu yüzden yazıyoruz Consumer<CartModel>. Genel ( <CartModel>) belirtmezseniz, providerpaket size yardımcı olamaz. providertürlere dayanır ve tür olmadan ne istediğinizi bilmez.
+
+
+ConsumerWidget'ın tek gerekli argümanı oluşturucudur. Oluşturucu, her ChangeNotifierdeğişiklik yapıldığında çağrılan bir işlevdir . (Başka bir deyişle, notifyListeners() modelinizi çağırdığınızda , ilgili tüm Consumerwidget'ların tüm oluşturucu yöntemleri çağrılır.)
+
+Oluşturucu üç argümanla çağrılır. Birincisi context, her derleme yönteminde de aldığınız .
+
+Oluşturucu işlevinin ikinci bağımsız değişkeni, ChangeNotifier-Değişiklik Bildiricisinin örneğidir. En başta istediğimiz buydu. Kullanıcı arayüzünün herhangi bir noktada nasıl görünmesi gerektiğini tanımlamak için modeldeki verileri kullanabilirsiniz.
+
+Üçüncü argüman, optimizasyon için var olan çocuktur-child. Consumer -Tüketicinizin altında, model değiştiğinde değişmeyen büyük bir widget alt ağacınız varsa, bunu bir kez oluşturabilir ve oluşturucudan alabilirsiniz.
+
+
+
+return Consumer<CartModel>(
+  builder: (context, cart, child) => Stack(
+    children: [
+    // // Her seferinde yeniden inşa etmeden burada SomeExpensiveWidget  kullanın.
+      if (child != null) child,
+      Text("Total price: ${cart.totalPrice}"),
+    ],
+  ),
+  // Build the expensive widget here.
+  child: const SomeExpensiveWidget(),
+);
+
+ConsumerWidget'larınızı ağacın mümkün olduğunca derinlerine yerleştirmek en iyi uygulamadır . Bir yerlerde bazı ayrıntılar değişti diye kullanıcı arayüzünün büyük bölümlerini yeniden oluşturmak istemezsiniz.
+
+return Consumer<CartModel>(
+  builder: (context, cart, child) {
+    return HumongousWidget(
+      // ...
+      child: AnotherMonstrousWidget(
+        // ...
+        child: Text('Total price: ${cart.totalPrice}'),
+      ),
+    );
+  },
+);
+
+
+
+Bunun yerine:
+
+// DO THIS
+return HumongousWidget(
+  // ...
+  child: AnotherMonstrousWidget(
+    // ...
+    child: Consumer<CartModel>(
+      builder: (context, cart, child) {
+        return Text('Total price: ${cart.totalPrice}');
+      },
+    ),
+  ),
+);
+
+
+
+Provider.of
+
+Bazen, kullanıcı arayüzünü değiştirmek için modeldeki verilere gerçekten ihtiyacınız yoktur, ancak yine de erişmeniz gerekir. Örneğin, Sepeti Temizle düğmesi kullanıcının her şeyi sepetten kaldırmasına izin vermek ister. Sepetin içeriğini görüntülemesine gerek yok, sadece clear () yöntemini çağırması gerekiyor.
+
+Bunun için Consumer<Cart Model> kullanabiliriz, ancak bu israf olur. Çerçeveden yeniden oluşturulması gerekmeyen bir widget'ı yeniden oluşturmasını istiyoruz.
+
+Bu kullanım durumu için Provider.of,(Sağlayıcıyı) kullanabiliriz.arasında, listen parametresi false olarak ayarlanmış.
+
+Provider.of<CartModel>(context, listen: false).removeAll();
+
+Yukarıdaki satırı bir derleme yönteminde kullanmak notifyListeners, çağrıldığında bu pencere öğesinin yeniden oluşturulmasına neden olmaz .
