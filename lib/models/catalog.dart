@@ -22,7 +22,7 @@ class CatalogModel{
     'Currying',
   ];
 
-/// Bu örnekte, katalog sonsuzdur ve [öğe Adları] üzerinde döngü yapar./// /// Bu örnekte, katalog sonsuzdur ve [öğe Adları] üzerinde döngü yapar.
+/// Bu örnekte, katalog sonsuzdur ve [öğe Adları] üzerinde döngü yapar.
   Item getById(int id)=> Item(id, itemNames[id % itemNames.length]);
 
 }
