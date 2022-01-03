@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_shopper/common/theme.dart';
 import 'package:provider_shopper/models/cart.dart';
 import 'package:provider_shopper/models/catalog.dart';
+import 'package:provider_shopper/screens/cart.dart';
 import 'package:provider_shopper/screens/catalog.dart';
 import 'package:provider_shopper/screens/login.dart';
 
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/':(context)=> const Login(),
           '/catalog':(context)=> const Catalog(),
-         // '/cart':(context)=> const Cart(),
+          '/cart':(context)=> const Cart(),
         },
 
       ),
