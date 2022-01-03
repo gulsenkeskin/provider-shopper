@@ -76,7 +76,7 @@ test('adding item increases total cost', () {
 });
 ```
 
-ChangeNotifierProvider
+## ChangeNotifierProvider
 
 ChangeNotifier Sağlayıcısını nereye koyacağımızı zaten biliyoruz: erişmesi gereken widget'ların üstünde. Cart Modeli söz konusu olduğunda, bu hem MyCart hem de mycatalog'un üstünde bir yer anlamına gelir.
 
@@ -111,7 +111,7 @@ void main() {
 ```
 
 
-Consumer
+## Consumer
 
 Artık CartModel , uygulamanızdaki widget'lara en üstteki ChangeNotifierProvider  bildirimi aracılığıyla sağlandığından, bunu kullanmaya başlayabiliriz.
 
@@ -187,7 +187,7 @@ return HumongousWidget(
 ```
 
 
-Provider.of
+## Provider.of
 
 Bazen, kullanıcı arayüzünü değiştirmek için modeldeki verilere gerçekten ihtiyacınız yoktur, ancak yine de erişmeniz gerekir. Örneğin, Sepeti Temizle düğmesi kullanıcının her şeyi sepetten kaldırmasına izin vermek ister. Sepetin içeriğini görüntülemesine gerek yok, sadece clear () yöntemini çağırması gerekiyor.
 
