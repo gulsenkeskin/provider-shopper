@@ -62,7 +62,7 @@ class CartModel extends ChangeNotifier {
 ChangeNotifier'a özel olan tek kod notifyListeners() dır. Model, uygulamanızın kullanıcı arayüzünü değiştirebilecek şekilde her değiştiğinde bu yöntemi çağırın. Diğer her şey CartModel'in kendisi ve iş mantığıdır.
 
 
-ChangeNotifierflutter: foundationFlutter'daki üst düzey sınıfların bir parçasıdır ve bunlara bağlı değildir. Kolayca test edilebilir ( bunun için widget testi kullanmanıza bile gerek yoktur ). Örneğin, işte basit bir birim testi CartModel:
+ChangeNotifier, flutter:foundation'ın bir parçasıdır ve Flutter'daki herhangi bir üst düzey sınıfa bağlı değildir. Kolayca test edilebilir (bunun için widget testi kullanmanıza bile gerek yoktur). Örneğin, CartModel'in basit bir birim testi:
 
 
 ```
