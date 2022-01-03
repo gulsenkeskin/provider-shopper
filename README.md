@@ -1,6 +1,8 @@
 # Provider Kullanım Örneği
 
 ![image](https://user-images.githubusercontent.com/63197899/147919173-2bed80e0-0a90-4f36-abe2-316001a214f4.png)
+
+
 Yalnızca ebeveynlerinin oluşturma yöntemlerinde yeni widget'lar oluşturabildiğiniz için, içeriği değiştirmek istiyorsanız, bunun mycart'ın üst öğesinde veya üstünde yaşaması gerekir.
 
 Flutter'da state'i , onu kullanan widget'ların üzerinde tutmak mantıklıdır.
