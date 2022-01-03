@@ -31,7 +31,7 @@ ChangeNotifier dinleyicilerine değişiklik bildirimi sağlayan Flutter SDK'da b
 
 Provider'da , ChangeNotifier (Değişiklik Bildiricisi), uygulama durumunuzu kapsüllemenin bir yoludur. Çok basit uygulamalar için, tek bir ChangeNotifier kullanabilirsiniz. Karmaşık olanlarda, birkaç modele ve dolayısıyla birkaç ChangeNotifier'a sahip olacaksınız. (Changenotifier'ı provider ile birlikte kullanmanıza gerek yoktur, ancak çalışması kolay bir sınıftır.)
 
-Alışveriş uygulaması örneğimizde, sepetin durumunu bir ChangeNotifier da(Değişiklik Bildiricisinde ) yönetmek istiyoruz. Onu genişleten yeni bir sınıf oluşturuyoruz, şöyle:
+Alışveriş uygulaması örneğimizde, sepetin durumunu bir ChangeNotifier'da (Değişiklik Bildiricisinde) yönetmek istiyoruz. Onu genişleten yeni bir sınıf oluşturuyoruz, şöyle:
 
 ```
 class CartModel extends ChangeNotifier {
