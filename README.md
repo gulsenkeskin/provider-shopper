@@ -7,6 +7,7 @@ Flutter'da state'i , onu kullanan widget'ların üzerinde tutmak mantıklıdır.
 
 Flutter'da içeriği her değiştiğinde yeni bir UI öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabilirsiniz
 
+```
 void myTapHandler(BuildContext context) {
   var cartModel = somehowGetMyCartModel(context);
   cartModel.add(item);
@@ -19,6 +20,7 @@ Widget build(BuildContext context) {
      // ···
   );
 }
+```
 
 
 ##ChangeNotifier
