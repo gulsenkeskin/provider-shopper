@@ -7,7 +7,7 @@ Yalnızca ebeveynlerinin oluşturma yöntemlerinde yeni widget'lar oluşturabild
 
 Flutter'da state'i , onu kullanan widget'ların üzerinde tutmak mantıklıdır.
 
-Flutter'da içeriği her değiştirdiğinizde yeni bir UI öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabilirsiniz
+Flutter'da içeriği her değiştirdiğinizde yeni bir UI öğesi oluşturursunuz. MyCart.updateWith(somethingNew)(Bir yöntem çağrısı) yerine MyCart(contents)(bir kurucu) kullanırsınız. Yeni widget'ları yalnızca ebeveynlerinin oluşturma yöntemlerinde oluşturabilirsiniz.
 
 ```
 void myTapHandler(BuildContext context) {
